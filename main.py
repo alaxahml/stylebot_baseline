@@ -5,7 +5,6 @@ from aiogram import Bot, Dispatcher
 from config_data.config import Config, load_config
 from handlers.user_handlers import user_router
 
-
 # Настраиваем базовую конфигурацию логирования
 logging.basicConfig(
     level=logging.DEBUG,
@@ -23,13 +22,16 @@ async def main() -> None:
     # Загружаем конфиг в переменную config
     config: Config = load_config()
 
+    photo_num = {"photo_num" : 0}
+
     # Инициализируем бот и диспетчер
     bot = Bot(token=config.tg_bot.token)
-    dp = Dispatcher()
+    dp = Dispatcher(photo_num=photo_num)
 
     # Регистрируем роутеры в диспетчере
     dp.include_router(user_router)
 
+    #dp.update.outer_middleware(FirstOuterMiddleware())
 
     # Запускаем polling
     await dp.start_polling(bot)
