@@ -61,6 +61,7 @@ async def process_start_command(message: Message, largest_photo: PhotoSize, stat
     file = await bot.get_file(largest_photo.file_id)
     print(file.file_path)
     await bot.download_file(file.file_path, "temp.jpg")
+    message.photo
 
 
 
