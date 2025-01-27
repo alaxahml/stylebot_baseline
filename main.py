@@ -1,9 +1,12 @@
+
+
 import asyncio
 import logging
 
 from aiogram import Bot, Dispatcher
 from config_data.config import Config, load_config
 from handlers.user_handlers import user_router
+from middlewares.outer import FirstOuterMiddleware
 
 
 # Настраиваем базовую конфигурацию логирования
@@ -23,12 +26,15 @@ async def main() -> None:
     # Загружаем конфиг в переменную config
     config: Config = load_config()
 
+
     # Инициализируем бот и диспетчер
     bot = Bot(token=config.tg_bot.token)
     dp = Dispatcher()
 
     # Регистрируем роутеры в диспетчере
     dp.include_router(user_router)
+
+    dp.message.outer_middleware(FirstOuterMiddleware())
 
 
     # Запускаем polling
