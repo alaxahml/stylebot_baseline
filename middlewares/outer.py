@@ -1,12 +1,9 @@
-import pprint
-import asyncio
 
 import logging
 from typing import Any, Awaitable, Callable, Dict
 
 from aiogram import BaseMiddleware
 from aiogram.types import TelegramObject
-from fsm.fsm import FSMStyleGen
 
 logger = logging.getLogger(__name__)
 
@@ -26,23 +23,16 @@ class FirstOuterMiddleware(BaseMiddleware):
             event.__class__.__name__
         )
 
-        # if data["event_update"].message.photo:
-        #     #data_dict = await data["state"].get_data()
-        #
-        #
-        #     if data.get("photo_num"):
-        #         logger.debug("to_second_photo")
-        #
-        #     else:
-        #         logger.debug("to_first_photo")
-        #         data["photo_num"] = True
 
-        await asyncio.sleep(1)
-        st = await data["state"].get_state()
-        logger.debug("%s", st)
-
-
-
+        if event.message.photo:
+            if not data.get("photo_num"):
+                data["photo_num"] = 1
+                logger.debug("first photo")
+            elif data["photo_num"] == 1:
+                data["photo_num"] = 2
+                logger.debug("second photo")
+            else:
+                del data["photo_num"]
 
         result = await handler(event, data)
 
